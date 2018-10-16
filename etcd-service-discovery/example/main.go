@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/daizuozhuo/etcd-service-discovery/discovery"
+	"github.com/kehuanhuan/etcd-service-discovery/discovery"
 )
 
 func main() {
