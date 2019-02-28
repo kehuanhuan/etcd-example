@@ -28,11 +28,11 @@ services:
       - --listen-peer-urls
       - http://0.0.0.0:2380
       - --advertise-client-urls
-      - http://172.16.238.101:2379
+      - http://0.0.0.0:2379
       - --listen-client-urls
       - http://0.0.0.0:2379
       - --initial-cluster
-      - node1=http://172.16.238.101:2380,node2=http://172.16.238.102:2380,node3=http://172.16.238.103:2380
+      - node1=http://172.16.238.101:2380,node2=http://172.16.238.102:2380
       - --initial-cluster-state
       - new
       - --initial-cluster-token
@@ -62,53 +62,53 @@ services:
       - --listen-client-urls
       - http://0.0.0.0:2379
       - --initial-cluster
-      - node1=http://172.16.238.101:2380,node2=http://172.16.238.102:2380,node3=http://172.16.238.103:2380
+      - node1=http://172.16.238.101:2380,node2=http://172.16.238.102:2380
       - --initial-cluster-state
       - new
       - --initial-cluster-token
       - docker-etcd
 
   # etcd
-  node3:
-    image: khhdocker/etcd
-    networks:
-      cluster_net:
-        ipv4_address: 172.16.238.103
-    volumes_from:
-      - applications
-    environment:
-      - ETCDCTL_API=3
-    command:
-      - /bin/etcd
-      - --data-dir=/data
-      - --name
-      - node2
-      - --initial-advertise-peer-urls
-      - http://172.16.238.103:2380
-      - --listen-peer-urls
-      - http://0.0.0.0:2380
-      - --advertise-client-urls
-      - http://172.16.238.103:2379
-      - --listen-client-urls
-      - http://0.0.0.0:2379
-      - --initial-cluster
-      - node1=http://172.16.238.101:2380,node2=http://172.16.238.102:2380,node3=http://172.16.238.103:2380
-      - --initial-cluster-state
-      - new
-      - --initial-cluster-token
-      - docker-etcd
+  # node3:
+  #   image: khhdocker/etcd
+  #   networks:
+  #     cluster_net:
+  #       ipv4_address: 172.16.238.103
+  #   volumes_from:
+  #     - applications
+  #   environment:
+  #     - ETCDCTL_API=3
+  #   command:
+  #     - /bin/etcd
+  #     - --data-dir=/data
+  #     - --name
+  #     - node2
+  #     - --initial-advertise-peer-urls
+  #     - http://172.16.238.103:2380
+  #     - --listen-peer-urls
+  #     - http://0.0.0.0:2380
+  #     - --advertise-client-urls
+  #     - http://172.16.238.103:2379
+  #     - --listen-client-urls
+  #     - http://0.0.0.0:2379
+  #     - --initial-cluster
+  #     - node1=http://172.16.238.101:2380,node2=http://172.16.238.102:2380,node3=http://172.16.238.103:2380
+  #     - --initial-cluster-state
+  #     - new
+  #     - --initial-cluster-token
+  #     - docker-etcd
 
-  agent-server:
-    image: khhdocker/workspace
-    volumes_from:
-      - applications
-    networks:
-      cluster_net:
-        ipv4_address: 172.16.238.104
-    tty: true
+  # agent-server:
+  #   image: khhdocker/workspace
+  #   volumes_from:
+  #     - applications
+  #   networks:
+  #     cluster_net:
+  #       ipv4_address: 172.16.238.104
+  #   tty: true
 
   server1:
-    image: khhdocker/workspace
+    image: khhdocker/grpc-workspace
     volumes_from:
       - applications
     networks:
@@ -117,7 +117,7 @@ services:
     tty: true
 
   server2:
-    image: khhdocker/workspace
+    image: khhdocker/grpc-workspace
     volumes_from:
       - applications
     networks:
@@ -126,12 +126,21 @@ services:
     tty: true
 
   client:
-    image: khhdocker/workspace
+    image: khhdocker/grpc-workspace
     volumes_from:
       - applications
     networks:
       cluster_net:
         ipv4_address: 172.16.238.107
+    tty: true
+
+  workspace:
+    image: khhdocker/go-workspace
+    volumes_from:
+      - applications
+    networks:
+      cluster_net:
+        ipv4_address: 172.16.238.108
     tty: true
 
 networks:
